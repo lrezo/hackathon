@@ -13,7 +13,7 @@ let i;
 // setup typewriter effect in the terminal demo
 if (document.getElementsByClassName('demo').length > 0) {
   i = 0;
-  var txt = `scribbler
+  const txt = `scribbler
             [Entry mode; press Ctrl+D to save and quit; press Ctrl+C to quit without saving]
 
             ###todo for new year dinner party
@@ -22,7 +22,7 @@ if (document.getElementsByClassName('demo').length > 0) {
             - butter
             - green onion
             - lots and lots of kiwis 🥝`;
-  var speed = 60;
+  const speed = 60;
 
   function typeItOut () {
     if (i < txt.length) {
@@ -38,21 +38,21 @@ if (document.getElementsByClassName('demo').length > 0) {
 // toggle tabs on codeblock
 window.addEventListener("load", function() {
   // get all tab_containers in the document
-  var tabContainers = getAll(".tab__container");
+  const tabContainers = getAll(".tab__container");
 
   // bind click event to each tab container
-  for (var i = 0; i < tabContainers.length; i++) {
+  for (let i = 0; i < tabContainers.length; i++) {
     get('.tab__menu', tabContainers[i]).addEventListener("click", tabClick);
   }
 
   // each click event is scoped to the tab_container
   function tabClick (event) {
     let i;
-    var scope = event.currentTarget.parentNode;
-    var clickedTab = event.target;
-    var tabs = getAll('.tab', scope);
-    var panes = getAll('.tab__pane', scope);
-    var activePane = get(`.${clickedTab.getAttribute('data-tab')}`, scope);
+    const scope = event.currentTarget.parentNode;
+    const clickedTab = event.target;
+    const tabs = getAll('.tab', scope);
+    const panes = getAll('.tab__pane', scope);
+    const activePane = get(`.${clickedTab.getAttribute('data-tab')}`, scope);
 
     // remove all active tab classes
     for (i = 0; i < tabs.length; i++) {
@@ -105,7 +105,7 @@ window.addEventListener('scroll', function () {
   const docNav = get('.doc__nav > ul');
 
   if( docNav) {
-    if (window.pageYOffset > 63) {
+    if (window.scrollY > 63) {
       docNav.classList.add('fixed');
     } else {
       docNav.classList.remove('fixed');
