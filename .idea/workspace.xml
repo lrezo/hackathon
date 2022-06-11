@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="63e971da-2692-4f0a-a868-627d954cd789" name="Changes" comment="updating">
+      <change afterPath="$PROJECT_DIR$/../hackathon/img/arduino-logo-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hackathon/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../hackathon/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../hackathon/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../hackathon/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -63,7 +65,7 @@
       <option name="presentableId" value="Default" />
       <updated>1654951738227</updated>
       <workItem from="1654951740716" duration="3752000" />
-      <workItem from="1654956296159" duration="3681000" />
+      <workItem from="1654956296159" duration="4771000" />
     </task>
     <task id="LOCAL-00001" summary="updating">
       <created>1654955860555</created>
@@ -135,7 +137,21 @@
       <option name="project" value="LOCAL" />
       <updated>1654959902157</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="updating">
+      <created>1654960025809</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1654960025809</updated>
+    </task>
+    <task id="LOCAL-00012" summary="updating">
+      <created>1654960192051</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1654960192051</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

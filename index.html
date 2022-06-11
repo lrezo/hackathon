@@ -12,13 +12,30 @@
     <link rel="author" href="#">
   </head>
   <style>
-
+    .flex{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      padding: .5rem;
+    }
+    .flex img{
+      width: 50px;
+      height: auto;
+      object-fit: contain;
+    }
+    nav{
+      display: unset;
+    }
   </style>
   <body>
     <div class="doc__bg"></div>
     <nav class="header">
-      <h1 class="logo"><img src="img/Arduino_Logo.svg.png" alt="Hackathon" width="80"
-                            height="50">Hackathon <span class="logo__thin">EscapeRoom</span></h1>
+      <div class="logo flex">
+        <img src="img/arduino-logo-1.png" alt="Hackathon">
+        <h1 >Hackathon <span class="logo__thin">EscapeRoom</span></h1>
+      </div>
+
 <!--      <ul class="menu">
         <div class="menu__item toggle"><span></span></div>
         <li class="menu__item"><a href="" class="link link&#45;&#45;dark"><i class="fa fa-github"></i> Github</a></li>
