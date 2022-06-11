@@ -151,7 +151,303 @@
           <h4>Arduino Scheme</h4>
           <img src="img/arduino-schemas/XanderArduinoShema.png" alt="">
           <h3>Code</h3>
+          <div class="code__block code__block--notabs">
+            <pre class="code code--block">
+              <code>
+                //RGB LED 1
+                int led1RedLightPin = 2;
+                int led1BlueLightPin = 3;
+                int led1GreenLightPin = 4;
 
+                //RGB LED 2
+                int led2RedLightPin = 5;
+                int led2BlueLightPin = 6;
+                int led2GreenLightPin = 7;
+
+                //RGB LED 3
+                int led3RedLightPin = 8;
+                int led3BlueLightPin = 9;
+                int led3GreenLightPin = 10;
+
+                //potentiometers
+                int sensor1Pin = 0;
+                int sensor2Pin = 1;
+                int sensor3Pin = 2;
+
+                //randomNumbers
+                //potentiometer 1
+                long randomNumber1;
+                int sensor1Value;
+
+                //potentiometer 2
+                long randomNumber2;
+                int sensor2Value;
+
+                //potentiometer 3
+                long randomNumber3;
+                int sensor3Value;
+
+
+                // puzzle
+                unsigned long eindeFout;
+                bool activeer = false;
+
+                void setup() {
+                  // put your setup code here, to run once:
+                  Serial.begin(9600);
+
+                  //rgbLeds
+                  //rgbLed1
+                  pinMode(led1RedLightPin, OUTPUT);
+                  pinMode(led1BlueLightPin, OUTPUT);
+                  pinMode(led1GreenLightPin, OUTPUT);
+
+                  //rgbLed2
+                  pinMode(led2RedLightPin, OUTPUT);
+                  pinMode(led2BlueLightPin, OUTPUT);
+                  pinMode(led2GreenLightPin, OUTPUT);
+
+                  //rgbLed3
+                  pinMode(led3RedLightPin, OUTPUT);
+                  pinMode(led3BlueLightPin, OUTPUT);
+                  pinMode(led3GreenLightPin, OUTPUT);
+
+                  //potentiometers
+                  //potentiometer 1
+                  pinMode(A0, INPUT);
+
+                  //potentiometer 2
+                  pinMode(A1, INPUT);
+
+                  //potentiometer 3
+                  pinMode(A2, INPUT);
+
+                  randomSeed(analogRead(A3)); //randomSeed on Unused analog pin to read noise (=values of the ambient)
+
+                  //generating random numbers for potentiometers
+                  // potentiometer 1
+                  randomNumber1 = random(1, 16);
+
+                  // potentiometer 2
+                  randomNumber2 = random(1, 16);
+
+                  // potentiometer 3
+                  randomNumber3 = random(1, 16);
+                }
+
+                void loop() { // put your main code here, to run repeatedly:
+                  // reading and remapping potentiometer values
+                  // potentiometer 1
+                  sensor1Value = map(analogRead(A0), 0, 1023, 0, 16);
+
+                  // potentiometer 2
+                  sensor2Value = map(analogRead(A1), 0, 1023, 0, 16);
+
+                  // potentiometer 3
+                  sensor3Value = map(analogRead(A2), 0, 1023, 0, 16);
+
+
+                  // amount correct potentiometer inputs
+                  int amountOfCorrect = 0;
+
+                  if (sensor3Value == randomNumber3) {
+                    amountOfCorrect++;
+                  }
+                  if (sensor2Value == randomNumber2) {
+                    amountOfCorrect++;
+                  }
+                  if (sensor1Value == randomNumber1) {
+                    amountOfCorrect++;
+                  }
+
+
+                  // amount almost correct potentiometer inputs
+                  int amountOfAlmost = 0;
+
+                  if (almostCorrect(sensor1Value, randomNumber1)) {
+                    amountOfAlmost++;
+                  }
+                  if (almostCorrect(sensor2Value, randomNumber2)) {
+                    amountOfAlmost++;
+                  }
+                  if (almostCorrect(sensor3Value, randomNumber3)) {
+                    amountOfAlmost++;
+                  }
+
+
+                  // amount wrong potentiometer inputs
+                  int amountWrong = 0;
+
+                  if (wrong(sensor1Value, randomNumber1)) {
+                    amountWrong++;
+                  }
+                  if (wrong(sensor2Value, randomNumber2)) {
+                    amountWrong++;
+                  }
+                  if (wrong(sensor3Value, randomNumber3)) {
+                    amountWrong++;
+                  }
+
+                  //setting rgb LEDs----------------------------------------------------------------------------------------------------
+                  if (amountOfCorrect == 3) { // if all 3 potentiometers are in the correct position
+
+                    if (millis() - eindeFout > 2000) {
+                      activeer = true;
+                      Serial.println("geslaagd");
+                    }
+                    if (activeer) {
+                      // rgb LED 3
+                      rgbLedOut(8, 9, 10); //int redLightPin, int greenLightPin, int blueLightPin
+                      // rgb LED 2
+                      rgbLedOut(5, 6, 7); //int redLightPin, int greenLightPin, int blueLightPin
+                      // rgb LED 1
+                      rgbLedOut(2, 3, 4); //int redLightPin, int greenLightPin, int blueLightPin
+
+                      delay(500);
+
+                      // rgb LED 3
+                      rgbLedColorGreenGood(8, 9, 10); //int redLightPin, int greenLightPin, int blueLightPin
+                      // rgb LED 2
+                      rgbLedColorGreenGood(5, 6, 7); //int redLightPin, int greenLightPin, int blueLightPin
+                      // rgb LED 1
+                      rgbLedColorGreenGood(2, 3, 4); //int redLightPin, int greenLightPin, int blueLightPin
+
+                      delay(500);
+                    }
+
+                    else {
+                      // rgb LED 3
+                      rgbLedColorGreenGood(8, 9, 10); //int redLightPin, int greenLightPin, int blueLightPin
+                      // rgb LED 2
+                      rgbLedColorGreenGood(5, 6, 7); //int redLightPin, int greenLightPin, int blueLightPin
+                      // rgb LED 1
+                      rgbLedColorGreenGood(2, 3, 4); //int redLightPin, int greenLightPin, int blueLightPin
+                    }
+
+                  }
+
+                  else if (amountOfCorrect == 2) { // if 2 potentiometers are in the correct position
+                    eindeFout = millis();
+                    // rgb LED 2
+                    rgbLedColorGreenGood(5, 6, 7); //int redLightPin, int greenLightPin, int blueLightPin
+                    // rgb LED 1
+                    rgbLedColorGreenGood(2, 3, 4); //int redLightPin, int greenLightPin, int blueLightPin
+                    // third potentiometer wrong or almost
+                    //almost
+                    if (amountOfAlmost == 1) {
+                      rgbLedColorOrangeAlmost(8, 9, 10); //int redLightPin, int greenLightPin, int blueLightPin
+                    }
+
+                    //wrong
+                    else if (amountWrong == 1) {
+                      rgbLedColorRedWrong(8, 9, 10); //int redLightPin, int greenLightPin, int blueLightPin
+                    }
+                  }
+
+                  else if (amountOfCorrect == 1) { // if 1 potentiometer is in the correct position
+                    eindeFout = millis();
+                    // rgb LED 1
+                    rgbLedColorGreenGood(2, 3, 4); //int redLightPin, int greenLightPin, int blueLightPin
+                    // second and third potentiometer wrong or almost
+                    // rgb LED 3
+                    //almost
+                    if (amountOfAlmost == 1) {
+                      rgbLedColorOrangeAlmost(5, 6, 7); //int redLightPin, int greenLightPin, int blueLightPin
+                    }
+
+                    //wrong
+                    else if (amountWrong == 1) {
+                      rgbLedColorRedWrong(8, 9, 10); //int redLightPin, int greenLightPin, int blueLightPin
+                    }
+
+                    // rgb LED 2
+                    //almost
+                    if (amountOfAlmost == 2) {
+                      rgbLedColorOrangeAlmost(8, 9, 10); //int redLightPin, int greenLightPin, int blueLightPin
+                      rgbLedColorOrangeAlmost(5, 6, 7); //int redLightPin, int greenLightPin, int blueLightPin
+                    }
+
+                    //wrong
+                    if (amountWrong == 2) {
+                      rgbLedColorRedWrong(8, 9, 10); //int redLightPin, int greenLightPin, int blueLightPin
+                      rgbLedColorRedWrong(5, 6, 7); //int redLightPin, int greenLightPin, int blueLightPin
+                    }
+                  }
+
+                  if (amountOfAlmost == 3) { // all 3 potentiometers almost
+                    eindeFout = millis();
+                    rgbLedColorOrangeAlmost(8, 9, 10); //int redLightPin, int greenLightPin, int blueLightPin
+                    rgbLedColorOrangeAlmost(5, 6, 7); //int redLightPin, int greenLightPin, int blueLightPin
+                    rgbLedColorOrangeAlmost(2, 3, 4); //int redLightPin, int greenLightPin, int blueLightPin
+                  }
+
+                  if (amountWrong == 3) {
+                    eindeFout = millis();
+                    rgbLedColorRedWrong(8, 9, 10); //int redLightPin, int greenLightPin, int blueLightPin
+                    rgbLedColorRedWrong(5, 6, 7); //int redLightPin, int greenLightPin, int blueLightPin
+                    rgbLedColorRedWrong(2, 3, 4); //int redLightPin, int greenLightPin, int blueLightPin
+                  }
+                }
+
+                // Checking if input is almost correct
+                bool almostCorrect(int remapped, int randomValue) {
+                  int randomPlus1 = randomValue + 2;
+                  int randomMinus1 = randomValue - 2;
+
+                  if (remapped == randomPlus1) { // chekcing input value is random value + 1
+                    return true;
+                  }
+                  else if (remapped == randomMinus1) { // chekcing input value is random value - 1
+                    return true;
+                  }
+                  else {
+                    return false;
+                  }
+                }
+
+                // Checking if input is wrong
+                bool wrong(int remapped, int randomValue) {
+                  int randomPlus1 = randomValue + 1;
+                  int randomMinus1 = randomValue - 1;
+
+                  if (remapped > randomPlus1) { // chekcing input value is greater than randomValue + 2
+                    return true;
+                  }
+                  else if (remapped < randomMinus1) { // chekcing input value is lesser than randomValue - 2
+                    return true;
+                  }
+                  else {
+                    return false;
+                  }
+                }
+
+                // Color rgb LED sets
+                void rgbLedColorGreenGood(int redLightPin, int blueLightPin, int greenLightPin) {
+                  analogWrite(redLightPin, 0);
+                  analogWrite(greenLightPin, 255);
+                  analogWrite(blueLightPin, 0);
+                }
+
+                void rgbLedColorOrangeAlmost(int redLightPin, int blueLightPin, int greenLightPin) {
+                  analogWrite(redLightPin, 255);
+                  analogWrite(greenLightPin, 255);
+                  analogWrite(blueLightPin, 0);
+                }
+
+                void rgbLedColorRedWrong(int redLightPin, int blueLightPin, int greenLightPin) {
+                  analogWrite(redLightPin, 255);
+                  analogWrite(greenLightPin, 0);
+                  analogWrite(blueLightPin, 0);
+                }
+
+                void rgbLedOut(int redLightPin, int blueLightPin, int greenLightPin) {
+                  analogWrite(redLightPin, 0);
+                  analogWrite(greenLightPin, 0);
+                  analogWrite(blueLightPin, 0);
+                }
+              </code>
+            </pre>
+          </div>
           <hr />
         </section>
 
@@ -163,6 +459,7 @@
           <h4>Logic Scheme</h4>
           <h4>Arduino Scheme</h4>
           <h3>Code</h3>
+
           <!--          <table id="customers">
                       <tr>
                         <th>Options</th>
