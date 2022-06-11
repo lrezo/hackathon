@@ -631,9 +631,55 @@
           <h4>Logic Scheme</h4>
           <img src="img/logic-schemas/JonathanLogicPart.png" alt="">
           <h4>Arduino Scheme</h4>
-
+          <img src="img/arduino-schemas/Jonathan%20ArduinoPic.png" alt="">
           <h3>Code</h3>
+          <div class="code__block code__block--notabs">
+            <pre class="code code--block">
+              <code>
+          // include the library code:
+          #include <'LiquidCrystal.h'>
 
+          // initialize the library with the numbers of the interface pins
+          LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+          // a variable to choose which reply from the crystal ball
+          int freq = 5439;
+          int freqSignaal = 5300;
+          int coordinaat = 1358;
+
+          void setup() {
+          // set up the number of columns and rows on the LCD
+          lcd.begin(16, 2);
+
+          }
+
+          void loop() {
+          freq = map(analogRead(A0), 0, 1023, 1000, 10000);
+
+          if(abs(freq - freqSignaal) <= 200) {
+          lcd.setCursor(0, 0);
+          lcd.print("Code ontvangen");
+          lcd.setCursor(0, 1);
+          String printen = "Coordinaat: ";
+          printen += coordinaat;
+          printen += "";
+          lcd.print(printen);
+          } else {
+          lcd.setCursor(0, 0);
+          // Print a message to the LCD.
+          lcd.print("NoodRadio       ");
+          lcd.setCursor(0, 1);
+          String printen = "Freq: ";
+          printen += freq / 1000.0;
+          printen += "kHz";
+          printen += "   ";
+          lcd.print(printen);
+          }
+          }
+              </code>
+            </pre>
+          </div>
+          
           <!--          <table id="customers">
                       <tr>
                         <th>Options</th>
@@ -769,7 +815,7 @@
 
         <section class="js-section">
           <h2 class="section__title">Resources</h2>
-          <a></a>
+          <a href="https://morsecode.world/international/translator.html">arduino projects book(2015)</a>
           <a></a>
           <a></a>
           <hr />
