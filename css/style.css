@@ -1,0 +1,46 @@
+.flex{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    padding: .5rem;
+}
+.flex img{
+    width: 50px;
+    height: auto;
+    object-fit: contain;
+}
+nav{
+    display: unset;
+}
+.footer{
+    /*background-color: #343334;*/
+    background-color: #0a5e62;
+}
+.doc__nav .selected{
+    color: #0a5e62;
+}
+.doc__nav .selected:after{
+    background-color: #0a5e62;
+}
+.doc__nav li:hover{
+    color: #933030;
+}
+aside li{
+    font-weight: 600;
+}
+.doc__nav{
+    margin-right: 1em;
+}
+.js-section img{
+    width: 100%;
+}
+.code--block{
+    resize: vertical;
+    overflow: auto;
+    height: 500px;
+
+}
+code {
+    color: #0a5e62;
+}
