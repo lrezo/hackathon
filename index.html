@@ -679,53 +679,7 @@
           <h4>Arduino Scheme</h4>
 
           <h3>Code</h3>
-          <div class="code__block code__block--notabs">
-            <pre class="code code--block">
-              <code>
-                                    // C++ code
-                  //
-                  #define pot1 A0
-                  #define pot2 A1
-                  #define pot3 A2
 
-                  bool activeer = false;
-                  bool pot1Juist, pot2Juist, pot3Juist = false;
-                  int gewildeWaarde1 = 4;
-                  int gewildeWaarde2 = 8;
-                  int gewildeWaarde3 = 1;
-                  unsigned long eindeFout;
-
-                  void setup()
-                  {
-                    pinMode(3, OUTPUT);
-                    Serial.begin(9600);
-                  }
-
-                  void loop()
-                  {
-                    int potWaarde1 = map(analogRead(pot1), 0, 1023, 0, 9);
-                    int potWaarde2 = map(analogRead(pot2), 0, 1023, 0, 9);
-                    int potWaarde3 = map(analogRead(pot3), 0, 1023, 0, 9);
-
-                    pot1Juist = potWaarde1 == gewildeWaarde1;
-                    pot2Juist = potWaarde2 == gewildeWaarde2;
-                    pot3Juist = potWaarde3 == gewildeWaarde3;
-
-                    Serial.println(pot1Juist+pot2Juist+pot3Juist);
-
-                    if(pot1Juist && pot2Juist && pot3Juist) {
-                      if(millis() - eindeFout > 2000) {
-                          activeer = true;
-                      }
-                    } else {
-                      eindeFout = millis();
-                    }
-
-                    digitalWrite(3, activeer);
-                  }
-              </code>
-            </pre>
-          </div>
           <!--          <table id="customers">
                       <tr>
                         <th>Options</th>
