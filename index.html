@@ -724,100 +724,82 @@
           <div class="code__block code__block--notabs">
             <pre class="code code--block">
               <code>
-                  #include <'IRremote.h'>
 
-                  #define RECV_PIN 2
-                  #define LEDRGB 4
+                #include <'IRremote.h'>
 
-                  #define PLAYPAUSE 16621663
-                  #define THREE 16599223
-                  #define ONE 16593103
-                  #define TWO 16615543
-                  #define FIVE 16623703
-                  #define EIGHT 16619623
-                  #define FOUR 16591063
-                  #define SIX 16607383
-                  #define SEVEN 16586983
-                  #define NINE 16603303
-                  #define LEDRGB_GREEN 4
-                  #define LEDRGB_BLUE 7
-                  #define LEDRGB_RED 12
+                #define RECV_PIN 2
+                #define LEDRGB_GREEN 4
+                #define LEDRGB_BLUE 7
+                #define LEDRGB_RED 12
 
-                  const long code[4] = {PLAYPAUSE, THREE, FIVE, EIGHT};
-                  int count = 0;
-                  boolean lollo = true;
+                #define OKBUTTON 64
 
-                  long lol[4];
-                  IRrecv irrecv(RECV_PIN);
-                  decode_results results;
+                #define ZERO 82
+                #define ONE 22
+                #define TWO 25
+                #define THREE 13
+                #define FOUR 12
+                #define FIVE 24
+                #define SIX 94
+                #define SEVEN 8
+                #define EIGHT 28
+                #define NINE 90
+
+                #define HASHTAG 74
+                #define STAR 66
+
+                const long code[4] = {HASHTAG, FIVE, FIVE, STAR};
+
+                int count = 0;
+
+                boolean lollo = true;
+
+                long arrayNumber[4];
 
 
-                  void setup() {
-                    Serial.begin(9600);
-                    irrecv.enableIRIn();
-                    pinMode(LEDRGB,OUTPUT);
-                    irrecv.blink13(true);
-                    pinMode(LEDRGB_GREEN,OUTPUT);
-                    pinMode(LEDRGB_BLUE,OUTPUT);
-                    pinMode(LEDRGB_RED,OUTPUT);
+                void setup() {
+                  Serial.begin(115200);
+                  IrReceiver.begin(RECV_PIN, ENABLE_LED_FEEDBACK);
+                  pinMode(LEDRGB_GREEN,OUTPUT);
+                  pinMode(LEDRGB_BLUE,OUTPUT);
+                  pinMode(LEDRGB_RED,OUTPUT);
+                }
+
+                void loop() {
+                  if (IrReceiver.decode() && lollo) {
+                    arrayNumber[count] = IrReceiver.decodedIRData.command;
+                    Serial.println(IrReceiver.decodedIRData.command);
+                    digitalWrite(LEDRGB_RED,HIGH);
+                    count++;
+                    delay(200);
+                    IrReceiver.resume();
+                  }
+                     digitalWrite(LEDRGB_RED,LOW);
+
+                  if (count == 4){
+                    if(arrayNumber[0] == code[0] && arrayNumber[1] == code[1] && arrayNumber[2] == code[2] && arrayNumber[3] == code[3]){
+                      Serial.println("The code is right");
+                      digitalWrite(LEDRGB_GREEN,HIGH);
+                      lollo = false;
+                    }else{
+                      Serial.println("The code is wrong");
+                      analogWrite(LEDRGB_RED,255);
+                      analogWrite(LEDRGB_GREEN,255);
+                      analogWrite(LEDRGB_BLUE,255);
+                      delay(2000);
+                      analogWrite(LEDRGB_RED,0);
+                      analogWrite(LEDRGB_GREEN,0);
+                      analogWrite(LEDRGB_BLUE,0);
+                    }
+                    delay(1000);
+                    count = 0;
                   }
 
-                  void loop() {
-                    if (irrecv.decode(&results) && lollo) {
-                      lol[count] = results.value;
-                      count++;
-                      irrecv.resume();
-                    }
 
-
-                    if (count == 4){
-                      if(lol[0] == code[0] && lol[1] == code[1] && lol[2] == code[2] && lol[3] == code[3]){
-                        Serial.println("The code is right");
-                        digitalWrite(4,HIGH);
-                        delay(5000);
-                        digitalWrite(4,LOW);
-                        lollo = false;
-                      }else{
-                        Serial.println("The code is wrong");
-                        analogWrite(LEDRGB_RED,255);
-                        analogWrite(LEDRGB_GREEN,25);
-                        analogWrite(LEDRGB_BLUE,255);
-                        delay(2000);
-                        analogWrite(LEDRGB_RED,0);
-                        analogWrite(LEDRGB_GREEN,0);
-                        analogWrite(LEDRGB_BLUE,0);
-                      }
-                      count = 0;
-                    }
-
-
-                  }
-
+                }
               </code>
             </pre>
           </div>
-          <!--          <table id="customers">
-                      <tr>
-                        <th>Options</th>
-                        <th>Value</th>
-                        <th>Default</th>
-                      </tr>
-                      <tr>
-                        <td>encryption</td>
-                        <td>encrypt all notes before saving. If turned on, it requires password to open the file.</td>
-                        <td>false</td>
-                      </tr>
-                      <tr>
-                        <td>highlighting</td>
-                        <td>Show syntax highlight on markdown text.</td>
-                        <td>true</td>
-                      </tr>
-                      <tr>
-                        <td>prettyTable</td>
-                        <td>Render table with Scribbler’s pretty table style.</td>
-                        <td>true</td>
-                      </tr>
-                    </table>-->
           <hr />
         </section>
 
