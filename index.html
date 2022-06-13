@@ -594,51 +594,238 @@
           <h4>Logic Scheme</h4>
           <img src="img/logic-schemas/JonathanLogicPart.png" alt="">
           <h4>Arduino Scheme</h4>
-          <img src="img/arduino-schemas/Jonathan%20ArduinoPic.png" alt="">
+          <img src="img/arduino-schemas/Jonathan%20ArduinoShcema.png" alt="">
           <h3>Code</h3>
           <div class="code__block code__block--notabs">
             <pre class="code code--block">
               <code>
-          // include the library code:
-          #include <'LiquidCrystal.h'>
+                // include the library code:
+                #include <'LiquidCrystal.h'>
 
-          // initialize the library with the numbers of the interface pins
-          LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+                #define r1 1 //grijs
+                #define r2 2 //geel
+                #define speaker 3
+                #define r3 4 //paars
+                #define k1 5 //blauw
+                #define k2 6 //oranje
+                #define k3 7 // groen
 
-          // a variable to choose which reply from the crystal ball
-          int freq = 5439;
-          int freqSignaal = 5300;
-          int coordinaat = 1358;
+                // initialize the library with the numbers of the interface pins
+                LiquidCrystal lcd(13, 12, 11, 10, 9, 8);
+                void(* resetFunc) (void) = 0; //functie dat arduino reset
 
-          void setup() {
-          // set up the number of columns and rows on the LCD
-          lcd.begin(16, 2);
+                int freq[] = {1310, 2560, 3682, 4840, 5210, 6365, 7420, 8192, 9080};
+                byte kanaalSignaal;
+                int geheimeCode;
+                int coordinaat = 358;
 
-          }
+                bool aan = false;
+                int morseSnelheid = 150;
+                byte kanaalKeuze = 1;
+                byte nummerKeuze = 0;
+                byte gameFase = 0;
+                byte ingevoerdGetal[] = {0, 0};
+                unsigned long prevMillis = 0;
+                unsigned long eindeFout = 0;
+                unsigned long vorigeDruk = 0;
+                byte oudNummerKeuze = 10;
 
-          void loop() {
-          freq = map(analogRead(A0), 0, 1023, 1000, 10000);
+                void setup() {
+                  randomSeed(32);
+                  geheimeCode = random(12, 100);
+                  kanaalSignaal = random(3, 10);
+                  lcd.begin(16, 2);
+                  pinMode(k1, OUTPUT);
+                  pinMode(k2, OUTPUT);
+                  pinMode(k3, OUTPUT);
+                  pinMode(r1, INPUT_PULLUP);
+                  pinMode(r2, INPUT_PULLUP);
+                  pinMode(r3, INPUT_PULLUP);
+                  Serial.begin(115200);
+                  Serial.print("Geheime code: ");
+                  Serial.println(geheimeCode);
+                  Serial.end();
+                }
 
-          if(abs(freq - freqSignaal) <= 200) {
-          lcd.setCursor(0, 0);
-          lcd.print("Code ontvangen");
-          lcd.setCursor(0, 1);
-          String printen = "Coordinaat: ";
-          printen += coordinaat;
-          printen += "";
-          lcd.print(printen);
-          } else {
-          lcd.setCursor(0, 0);
-          // Print a message to the LCD.
-          lcd.print("NoodRadio       ");
-          lcd.setCursor(0, 1);
-          String printen = "Freq: ";
-          printen += freq / 1000.0;
-          printen += "kHz";
-          printen += "   ";
-          lcd.print(printen);
-          }
-          }
+                void loop() {
+                  if(aan) {
+                    //gameFases
+                    //apparaat aangezet
+                    if(gameFase == 0) {
+                      kanaalKeuze = min(kanaalKeuze, 9);
+                      lcd.setCursor(0, 0);
+                      lcd.print("NoodRadio CH: ");
+                      lcd.print(kanaalKeuze);
+                      lcd.setCursor(0, 1);
+                      String printen = "Freq: ";
+                      printen += freq[kanaalKeuze-1] / 1000.0;
+                      printen += "kHz";
+                      printen += "   ";
+                      lcd.print(printen);
+                      if(kanaalKeuze == kanaalSignaal) {
+                        speelMorse(geheimeCode);
+                        if(millis() - eindeFout > 2000) {
+                          gameFase = 1;
+                          kanaalKeuze = 1;
+                        } else {
+                          eindeFout = millis();
+                        }
+                      }
+                    }
+
+                    //radiofrequentie gevonden, speel morse
+                    if(gameFase == 1) {
+                      kanaalKeuze = min(kanaalKeuze, 9);
+                      nummerKeuze = min(nummerKeuze, 1);
+                      lcd.setCursor(0, 0);
+                      lcd.print("Geef Code:      ");
+                      if(oudNummerKeuze == nummerKeuze) {
+                        ingevoerdGetal[nummerKeuze] = kanaalKeuze;
+                      } else {
+                        oudNummerKeuze = nummerKeuze;
+                        kanaalKeuze = ingevoerdGetal[nummerKeuze];
+                      }
+                      for(int i = 0; i < sizeof(ingevoerdGetal); i++) {
+                        lcd.setCursor(i, 1);
+                          if(i == nummerKeuze) {
+                            if(millis() % 800 > 400) {
+                              lcd.print("_");
+                            } else {
+                              lcd.print(ingevoerdGetal[i]);
+                            }
+                          } else {
+                            lcd.print(ingevoerdGetal[i]);
+                          }
+                      }
+                      lcd.print("              ");
+                      if(getIngeduwdeKnop() == 2 && millis() - vorigeDruk > 200) {
+                        if(ingevoerdGetal[0]*10 + ingevoerdGetal[1] == geheimeCode) {
+                          gameFase = 2;
+                        } else {
+                          lcd.setCursor(3, 1);
+                          lcd.print("FOUT: REPLAY");
+                          speelMorse(geheimeCode);
+                        }
+                      }
+                    }
+
+                    //morsecode gekraakt, geef coordinaten
+                    if(gameFase == 2) {
+                      lcd.setCursor(0, 0);
+                      if(millis() % 2000 > 1000) {
+                        lcd.print("Coordinaten     ");
+                      } else {
+                        lcd.print("ontvangen:      ");
+                      }
+                      lcd.setCursor(0, 1);
+                      String printen = "X:";
+                      printen += coordinaat / 100;
+                      printen += " Y:";
+                      printen += coordinaat % 100 / 10;
+                      printen += " Z:";
+                      printen += coordinaat % 10;
+                      lcd.print(printen);
+                    }
+                  }
+                  //knoppen
+                  if(millis() - vorigeDruk > 200) {
+                    vorigeDruk = millis();
+                    switch(getIngeduwdeKnop()) {
+                      case 7: //knop UP
+                        kanaalKeuze += 1;
+                        break;
+                      case 9: //knop DOWN
+                        kanaalKeuze -= 1;
+                        break;
+                      case 3: //knop LEFT
+                        nummerKeuze -= 1;
+                        break;
+                      case 4: //knop RIGHT
+                        nummerKeuze += 1;
+                        break;
+                      case 8: //knop POWER
+                        aan = true;
+                        break;
+                      case 1:
+                        resetFunc();
+                        break;
+                      default:
+                        break;
+                    }
+                  }
+                }
+
+                //morse afspelen
+                void speelMorse(int code) {
+                  code = code % 100;
+                  int codeArray[] = {code % 100 / 10, code % 10};
+                  for(int i = 0; i < sizeof(codeArray)/sizeof(int); i ++) {
+                    speelMorseCijfer(codeArray[i]);
+                    delay(morseSnelheid * 5);
+                  }
+                }
+
+                void speelMorseCijfer(int cijfer) {
+                  Serial.println(cijfer);
+                  cijfer = cijfer % 10;
+                  if(cijfer == 0) { cijfer = 10; }
+                  if(cijfer <= 5) {
+                    for(int i = 0; i < cijfer; i++) {
+                      speelToon(1);
+                    }
+                    for(int i = cijfer; i < 5; i++) {
+                      speelToon(4);
+                    }
+                  } else {
+                    for(int i = 5; i < cijfer; i++) {
+                      speelToon(4);
+                    }
+                    for(int i = cijfer; i < 10; i++) {
+                      speelToon(1);
+                    }
+                  }
+                }
+
+                void speelToon(int tijd) {
+                    tijd = morseSnelheid * tijd;
+                    tone(speaker, 820, tijd);
+                    delay(tijd);
+                    noTone(speaker);
+                    delay(morseSnelheid);
+                }
+
+                //gedrukte knop uit knoppenmatrix halen
+                int getIngeduwdeKnop() {
+                  int ingeduwdeKnop;
+                  digitalWrite(k1, LOW); //kolom 1
+                  if(!digitalRead(r1)) {
+                    ingeduwdeKnop = 1;
+                  } else if(!digitalRead(r2)) {
+                    ingeduwdeKnop = 2;
+                  } else if(!digitalRead(r3)) {
+                    ingeduwdeKnop = 3;
+                  }
+                  digitalWrite(k1, HIGH);
+                  digitalWrite(k2, LOW); //kolom 2
+                  if(!digitalRead(r1)) {
+                    ingeduwdeKnop = 4;
+                  } else if(!digitalRead(r2)) {
+                    ingeduwdeKnop = 5;
+                  } else if(!digitalRead(r3)) {
+                    ingeduwdeKnop = 6;
+                  }
+                  digitalWrite(k2, HIGH);
+                  digitalWrite(k3, LOW);//kolom 3
+                  if(!digitalRead(r1)) {
+                    ingeduwdeKnop = 7;
+                  } else if(!digitalRead(r2)) {
+                    ingeduwdeKnop = 8;
+                  } else if(!digitalRead(r3)) {
+                    ingeduwdeKnop = 9;
+                  }
+                  digitalWrite(k3, HIGH);
+                    return ingeduwdeKnop;
+                }
               </code>
             </pre>
           </div>
