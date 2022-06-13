@@ -51,3 +51,11 @@ code {
 table a{
     color: #0a5e62;
 }
+
+hr{
+    border-bottom: 2px solid var(--dark-gray-color);
+}
+
+#rs hr{
+    border-bottom: 1px solid var(--bg-color) !important;
+}
