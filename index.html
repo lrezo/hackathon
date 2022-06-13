@@ -9,11 +9,12 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800,900" rel="stylesheet">
     <link rel="stylesheet" href="css/scribbler-global.css">
     <link rel="stylesheet" href="css/scribbler-doc.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="author" href="#">
     <link rel="icon" href="img/logos/space-invaders.svg">
   </head>
-  <body>
+  <body >
     <div class="doc__bg"></div>
     <nav class="header">
       <div class="logo flex">
@@ -41,10 +42,34 @@
         </ul>
       </aside>
 
-      <article class="doc__content">
+      <article id="myStyle" class="doc__content">
         <section class="js-section">
           <h1 class="" style="font-size: 2em">Stranded in space</h1>
-          <img src="img/realPics/realPic1.jpg" alt="">
+          <div class="h-100">
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+              </div>
+              <div class="carousel-inner">
+                <div class="carousel-item active" data-bs-interval="5000">
+                  <img src="img/realPics/JonathanRealPic1.jpg" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                  <img src="img/realPics/JonathanRealPic2.jpg" class="d-block w-100" alt="...">
+                </div>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+          </div>
+            <br>
 
           <p>            Je bent gestrand in de ruimte met een lekkende zuurstof tank. Deze bepaald hoeveel tijd je hebt om de puzzels op te lossen. Het doel is om de juiste coördinaten te verkrijgen en jezelf te redden. Er is echter een probleem; de machinekamer waar de coördinaten worden ingegeven is vergrendeld.
           </p>
@@ -91,7 +116,7 @@
             </tbody>
           </table>
 
-          <hr>
+          <hr class="hr">
 
         </section>
         <section  id="1"  class="js-section">
@@ -941,5 +966,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
     <script src="https://content.arduino.cc/assets/arduinoSketchIframeResizer.js"></script>
     <script src="js/scribbler.js"></script>
+  <script src="js/bootstrap.bundle.js"></script>
   </body>
 </html>

@@ -52,10 +52,27 @@ table a{
     color: #0a5e62;
 }
 
-hr{
-    border-bottom: 2px solid var(--dark-gray-color);
+#myStyle hr{
+    border-bottom: 2px solid var(--dark-gray-color)!important;
+    padding: 0;
 }
 
 #rs hr{
     border-bottom: 1px solid var(--bg-color) !important;
+}
+
+h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+    margin-top: revert;
+    margin-bottom: revert;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+ol, ul, dl {
+    margin-top: revert;
+    margin-bottom: revert;
+}
+p{
+    font-weight: 400;
+    color: black;
 }
