@@ -178,6 +178,8 @@
                 int sensor3Value;
 
 
+                boolean proefTrueOrNot = false;
+
                 // puzzle
                 unsigned long eindeFout;
                 bool activeer = false;
@@ -216,25 +218,25 @@
 
                   //generating random numbers for potentiometers
                   // potentiometer 1
-                  randomNumber1 = random(1, 16);
+                  randomNumber1 = random(0, 8);
 
                   // potentiometer 2
-                  randomNumber2 = random(1, 16);
+                  randomNumber2 = random(0, 8);
 
                   // potentiometer 3
-                  randomNumber3 = random(1, 16);
+                  randomNumber3 = random(0, 8);
                 }
 
                 void loop() { // put your main code here, to run repeatedly:
                   // reading and remapping potentiometer values
                   // potentiometer 1
-                  sensor1Value = map(analogRead(A0), 0, 1023, 0, 16);
+                  sensor1Value = map(analogRead(A0), 0, 1023, 0, 8);
 
                   // potentiometer 2
-                  sensor2Value = map(analogRead(A1), 0, 1023, 0, 16);
+                  sensor2Value = map(analogRead(A1), 0, 1023, 0, 8);
 
                   // potentiometer 3
-                  sensor3Value = map(analogRead(A2), 0, 1023, 0, 16);
+                  sensor3Value = map(analogRead(A2), 0, 1023, 0, 8);
 
 
                   // amount correct potentiometer inputs
@@ -283,9 +285,12 @@
 
                     if (millis() - eindeFout > 2000) {
                       activeer = true;
-                      Serial.println("geslaagd");
                     }
                     if (activeer) {
+                      if(!proefTrueOrNot){
+                        Serial.println("2BAD007");
+                        proefTrueOrNot = true;
+                      }
                       // rgb LED 3
                       rgbLedOut(8, 9, 10); //int redLightPin, int greenLightPin, int blueLightPin
                       // rgb LED 2
@@ -381,8 +386,10 @@
 
                 // Checking if input is almost correct
                 bool almostCorrect(int remapped, int randomValue) {
-                  int randomPlus1 = randomValue + 2;
+                  int randomPlus1 = randomValue + 1;
+                  int randomPlus2 = randomValue + 2;
                   int randomMinus1 = randomValue - 2;
+                  int randomMinus2 = randomValue - 2;
 
                   if (remapped == randomPlus1) { // chekcing input value is random value + 1
                     return true;
@@ -420,7 +427,7 @@
 
                 void rgbLedColorOrangeAlmost(int redLightPin, int blueLightPin, int greenLightPin) {
                   analogWrite(redLightPin, 255);
-                  analogWrite(greenLightPin, 255);
+                  analogWrite(greenLightPin, 150);
                   analogWrite(blueLightPin, 0);
                 }
 
@@ -435,6 +442,7 @@
                   analogWrite(greenLightPin, 0);
                   analogWrite(blueLightPin, 0);
                 }
+
               </code>
             </pre>
           </div>
